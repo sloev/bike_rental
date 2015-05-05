@@ -1,5 +1,5 @@
 __author__ = 'johannes'
-from app import DB
+from settings import DB
 
 from models import *
 import pony.orm as ponyorm
@@ -17,6 +17,9 @@ def create_users(amount):
     last_names = ["andersen", "holgersen", "tolstoj", "pontopidan"]
     street_names = ["frigade", "vestergade", "frimestervej", "bredgade", "nordefasanvej"]
     cities = ["nyborg", "aalborg", "svendborg", "ringsted"]
+    username = "username_"
+    password = "1234"
+    cus = None
     for i in range(amount):
         customer_id+=1
         phone_number_string = "%08d" % randint(0,99999999)
@@ -28,7 +31,12 @@ def create_users(amount):
 
         first_name = first_names[randint(0,len(first_names)-1)]
         last_name = last_names[randint(0,len(last_names)-1)]
-        customer = Customer(user_id=customer_id, first_name=first_name, last_name=last_name, address=address, phone=phone, creation_date=datetime.now())
+
+        _username = "%s%d" %(username, i)
+
+        customer = Customer(username=_username, password=password, user_id=customer_id, first_name=first_name, last_name=last_name, address=address, phone=phone, creation_date=datetime.now())
+        cus = customer
+    cus.is_admin = True
 
 if __name__ == "__main__":
     sql_debug(True)

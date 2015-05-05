@@ -4,7 +4,8 @@ from datetime import datetime
 from decimal import Decimal
 from pony.orm import PrimaryKey,Required,Set, Optional
 
-from app import DB as db
+from settings import DB as db
+
 
 class Address(db.Entity):
     address_id = PrimaryKey(int, auto=True)
@@ -33,6 +34,8 @@ class User(db.Entity):
     phone = Optional(Phone)
     user_id = PrimaryKey(int, auto=True)
     creation_date = Required(datetime)
+    username = Required(str, unique=True)
+    password = Required(str)
 
 
 class Customer(db.User):
@@ -95,3 +98,7 @@ class Bill(db.Entity):
 class Repair_report(db.Entity):
     repair_report_id = PrimaryKey(int, auto=True)
     repair_contract = Required(Repair_contract)
+
+
+class Admin(db.Manager):
+    pass
