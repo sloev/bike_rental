@@ -2,7 +2,7 @@ __author__ = 'johannes'
 
 from datetime import datetime
 from decimal import Decimal
-from pony.orm import PrimaryKey,Required,Set, Optional
+from pony.orm import PrimaryKey,Required,Set, Optional, sql_debug
 
 from settings import DB as db
 
@@ -36,6 +36,7 @@ class User(db.Entity):
     creation_date = Required(datetime)
     username = Required(str, unique=True)
     password = Required(str)
+    salt = Required(str)
 
 
 class Customer(db.User):
@@ -102,3 +103,6 @@ class Repair_report(db.Entity):
 
 class Admin(db.Manager):
     pass
+
+sql_debug(True)
+print db.generate_mapping(create_tables=True)

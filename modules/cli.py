@@ -1,30 +1,89 @@
 __author__ = 'johannes'
+from settings import DB
 import npyscreen
 
+import pony.orm as pny
+from models import *
 
-class TestApp(npyscreen.NPSApp):
-    def main(self):
-        # These lines create the form and populate it with widgets.
-        # A fairly complex screen in only 8 or so lines of code - a line for each control.
-        F  = npyscreen.Form(name = "Welcome to Npyscreen",)
-        t  = F.add(npyscreen.TitleText, name = "Text:",)
-        fn = F.add(npyscreen.TitleFilename, name = "Filename:")
-        fn2 = F.add(npyscreen.TitleFilenameCombo, name="Filename2:")
-        dt = F.add(npyscreen.TitleDateCombo, name = "Date:")
-        s  = F.add(npyscreen.TitleSlider, out_of=12, name = "Slider")
-        ml = F.add(npyscreen.MultiLineEdit,
-               value = """try typing here!\nMutiline text, press ^R to reformat.\n""",
-               max_height=5, rely=9)
-        ms = F.add(npyscreen.TitleSelectOne, max_height=4, value = [1,], name="Pick One",
-                values = ["Option1","Option2","Option3"], scroll_exit=True)
-        ms2= F.add(npyscreen.TitleMultiSelect, max_height =-2, value = [1,], name="Pick Several",
-                values = ["Option1","Option2","Option3"], scroll_exit=True)
+import auth
+import logging
+logging.basicConfig(filename='bike_rental.log', level=logging.INFO)
+logging.info('Started')
 
-        # This lets the user interact with the Form.
-        F.edit()
+class Singleton():
+    singleton = None
+    @staticmethod
+    def get_instance():
+        if not Singleton.singleton:
+            Singleton.singleton = Singleton()
+        return Singleton.singleton
 
-        print(ms.get_selected_objects())
+    def __init__(self):
+        self.current_user = None
 
-if __name__ == "__main__":
-    App = TestApp()
-    App.run()
+
+
+class LoginForm(npyscreen.Form):
+    def create(self):
+        super(LoginForm, self).create()
+        self.name = "Welcome to login screen"
+                                              # I've ommitted it from later example code.
+        self.username = self.add(npyscreen.TitleText, name='Username')
+        self.password = self.add(npyscreen.TitlePassword, name='Password')
+
+    def afterEditing(self):
+
+        with pny.db_session:
+            user = User.get(username=self.username.value)
+            if user:
+                if auth.authenticate(user.password, user.salt, self.password.value):
+                    Singleton.get_instance().current_user = user
+
+                    if isinstance(user, Admin):
+                        self.parentApp.setNextForm('Admin')
+                    elif isinstance(user, Customer):
+                        self.parentApp.setNextForm('Customer')
+                    elif isinstance(user, Manager):
+                        self.parentApp.setNextForm('Manager')
+                    elif isinstance(user, Mechanic):
+                        self.parentApp.setNextForm('Mechanic')
+                else:
+                    self.parentApp.setNextForm(None)
+
+class Profile(npyscreen.Form):
+    def create(self):
+        super(Profile, self).create()
+        self.setup()
+
+    def setup(self):
+        pass
+
+class CustomerProfile(Profile):
+    def setup(self):
+        self.name="customer welcome"
+
+class ManagerProfile(Profile):
+    pass
+
+class AdminProfile(ManagerProfile):
+    def beforeEditing(self):
+        name = Singleton.get_instance().current_user.first_name
+        self.name="admin welcome:%s" % name
+
+
+class MechanicProfile(Profile):
+    pass
+
+class MyApplication(npyscreen.NPSAppManaged):
+   def onStart(self):
+       self.registerForm('MAIN', LoginForm())
+       self.registerForm('Customer', CustomerProfile())
+       self.registerForm('Admin', AdminProfile())
+       self.registerForm('Manager', ManagerProfile())
+       self.registerForm('Mechanic', MechanicProfile())
+
+       # A real application might define more forms here.......
+
+if __name__ == '__main__':
+
+    TestApp = MyApplication().run()
