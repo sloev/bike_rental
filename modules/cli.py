@@ -12,6 +12,7 @@ logging.info('Started')
 
 class Singleton():
     singleton = None
+
     @staticmethod
     def get_instance():
         if not Singleton.singleton:
@@ -56,23 +57,28 @@ class Profile(npyscreen.Form):
         self.setup()
 
     def setup(self):
-        pass
+        self._profile_type = ""
+
+    def beforeEditing(self):
+        self.user = Singleton.get_instance().current_user
+        self.name = "%s | %s" % (self._profile_type, self.user.first_name)
 
 class CustomerProfile(Profile):
     def setup(self):
-        self.name="customer welcome"
+        self._profile_type = "Customer"
 
 class ManagerProfile(Profile):
-    pass
+    def setup(self):
+        self._profile_type = "Manager"
 
 class AdminProfile(ManagerProfile):
-    def beforeEditing(self):
-        name = Singleton.get_instance().current_user.first_name
-        self.name="admin welcome:%s" % name
-
+    def setup(self):
+        self._profile_type = "Admin"
 
 class MechanicProfile(Profile):
-    pass
+    def setup(self):
+        self._profile_type = "Mechanic"
+
 
 class MyApplication(npyscreen.NPSAppManaged):
    def onStart(self):
@@ -82,8 +88,5 @@ class MyApplication(npyscreen.NPSAppManaged):
        self.registerForm('Manager', ManagerProfile())
        self.registerForm('Mechanic', MechanicProfile())
 
-       # A real application might define more forms here.......
-
 if __name__ == '__main__':
-
     TestApp = MyApplication().run()
