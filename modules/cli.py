@@ -1,5 +1,5 @@
 __author__ = 'johannes'
-from settings import DB
+from settings import DB, Singleton
 import npyscreen
 
 import pony.orm as pny
@@ -10,19 +10,6 @@ import logging
 logging.basicConfig(filename='bike_rental.log', level=logging.INFO)
 logging.info('Started')
 
-class Singleton():
-    singleton = None
-
-    @staticmethod
-    def get_instance():
-        if not Singleton.singleton:
-            Singleton.singleton = Singleton()
-        return Singleton.singleton
-
-    def __init__(self):
-        self.current_user = None
-
-
 
 class LoginForm(npyscreen.Form):
     def create(self):
@@ -31,6 +18,10 @@ class LoginForm(npyscreen.Form):
                                               # I've ommitted it from later example code.
         self.username = self.add(npyscreen.TitleText, name='Username')
         self.password = self.add(npyscreen.TitlePassword, name='Password')
+
+    def beforeEditing(self):
+        self.username.value = ""
+        self.password.value = ""
 
     def afterEditing(self):
 
@@ -54,20 +45,36 @@ class LoginForm(npyscreen.Form):
 class Profile(npyscreen.Form):
     def create(self):
         super(Profile, self).create()
+        self.log_out_button = self.add(npyscreen.ButtonPress, name="log out!")
+        self.log_out_button.whenPressed = self._logout
         self.setup()
+
+    def _logout(self):
+        self.parentApp.setNextForm("MAIN")
+        self.exit_editing()
 
     def setup(self):
         self._profile_type = ""
 
     def beforeEditing(self):
         self.user = Singleton.get_instance().current_user
-        self.name = "%s | %s" % (self._profile_type, self.user.first_name)
+        self.name = "[ %s ]  -  logged in as: \"%s\"" % (self._profile_type, self.user.username)
 
 class CustomerProfile(Profile):
     def setup(self):
         self._profile_type = "Customer"
 
-class ManagerProfile(Profile):
+class EmployerProfile(Profile):
+    def create(self):
+        super(EmployerProfile, self).create()
+
+        self.list_repair_contracts_button = self.add(npyscreen.ButtonPress, name="List repair contracts")
+        self.list_repair_contracts_button.whenPressed = self._list_repair_contracts
+
+    def _list_repair_contracts(self):
+        pass
+
+class ManagerProfile(EmployerProfile):
     def setup(self):
         self._profile_type = "Manager"
 
@@ -75,7 +82,7 @@ class AdminProfile(ManagerProfile):
     def setup(self):
         self._profile_type = "Admin"
 
-class MechanicProfile(Profile):
+class MechanicProfile(EmployerProfile):
     def setup(self):
         self._profile_type = "Mechanic"
 
