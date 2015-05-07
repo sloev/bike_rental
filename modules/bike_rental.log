@@ -204,3 +204,171 @@ WHERE "classtype" IN ('Employer', 'Admin', 'Manager', 'Mechanic', 'Customer', 'U
   AND "username" = %(p1)s
 INFO:root:auth - authenticate: stored_password=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e, stored_salt=VLnrGpJNsikXfw4lNOe4eQ==, new_password=1234, _new=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e
 INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Admin', 'Manager', 'Mechanic', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Mechanic', 'Admin', 'Manager', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Mechanic', 'Admin', 'Manager', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm.sql:INSERT INTO "address" ("street_name", "street_number", "zip", "city") VALUES (%(p1)s, %(p2)s, %(p3)s, %(p4)s) RETURNING "address_id"
+INFO:pony.orm.sql:INSERT INTO "user" ("first_name", "last_name", "creation_date", "username", "password", "salt", "address") VALUES (%(p1)s, %(p2)s, %(p3)s, %(p4)s, %(p5)s, %(p6)s, %(p7)s) RETURNING "user_id"
+INFO:pony.orm.sql:INSERT INTO "phone" ("number", "user") VALUES (%(p1)s, %(p2)s)
+INFO:pony.orm:COMMIT
+INFO:pony.orm:RELEASE CONNECTION

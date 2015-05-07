@@ -1,4 +1,5 @@
 __author__ = 'johannes'
+# -*- coding: utf-8 -*-
 
 from settings import DB
 
@@ -44,8 +45,24 @@ def create_users(amount):
 
     admin = Admin(username="admin", salt=salt, password=password, first_name="cavin", last_name="hobbs", address=address, phone=phone, creation_date=datetime.now())
 
+@ponyorm.db_session
 def create_user():
-    pass
+    address = Address(street_name="slotsgade", street_number=3, zip=2200, city="copenhagen")
+    phone = Phone(number="60805762")
+    user = User(username="johannesgj",
+                salt="tpwdvaVAM6dHhuj+JTfB+w==",
+                password="d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1",
+                first_name="johannes",
+                last_name="valbjorn",
+                address=address,
+                phone=phone,
+                creation_date=datetime.now())
+    admin = Admin(user=user)
+    user.employee = admin
+
+    address.user.add=user
+    phone.user=user
+
 if __name__ == "__main__":
-    create_users(10)
+    create_user()
     DB.commit()

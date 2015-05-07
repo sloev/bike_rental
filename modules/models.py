@@ -7,20 +7,19 @@ from pony.orm import PrimaryKey,Required,Set, Optional, sql_debug
 from settings import DB as db
 
 
-
 class Address(db.Entity):
     address_id = PrimaryKey(int, auto=True)
     street_name = Required(str)
     street_number = Required(int)
     zip = Required(int)
     city = Required(str)
-    user = Optional("User")
+    users = Set("User")
 
 
 class Bike(db.Entity):
     bike_type = Required("Bike_type")
-    bike_serial = PrimaryKey("Bike_serial")
     contracts = Set("Contract")
+    serial_number = PrimaryKey(int)
 
 
 class Phone(db.Entity):
@@ -31,7 +30,6 @@ class Phone(db.Entity):
 class User(db.Entity):
     first_name = Required(unicode)
     last_name = Required(unicode)
-    address = Required(Address)
     phone = Optional(Phone)
     user_id = PrimaryKey(int, auto=True)
     creation_date = Required(datetime)
@@ -40,6 +38,7 @@ class User(db.Entity):
     salt = Required(str)
     customer = Optional("Customer")
     employee = Optional("Employee")
+    address = Required(Address)
 
 
 class Customer(db.Entity):
@@ -52,29 +51,22 @@ class Employee(db.Entity):
     salary = Optional(int)
     Employer_id = PrimaryKey(int, auto=True)
     user = Required(User)
-    manager = Optional("Manager")
-    mechanic = Optional("Mechanic")
 
 
-class Manager(db.Entity):
+class Manager(db.Employee):
     contracts = Set("Contract")
-    employee = Required(Employee)
-    admin = Optional("Admin")
 
 
-class Mechanic(db.Entity):
+class Mechanic(db.Employee):
     repair_contracts = Set("Repair_contract")
-    employee = Required(Employee)
 
 
 class Contract(db.Entity):
     contract_id = PrimaryKey(int, auto=True)
     begin_date = Required(datetime)
     end_date = Required(datetime)
-    bike = Required(Bike)
     manager = Required(Manager)
-    rental_contract = Optional("Rental_contract")
-    repair_contract = Optional("Repair_contract")
+    bike = Required(Bike)
 
 
 class Bike_type(db.Entity):
@@ -86,39 +78,31 @@ class Bike_type(db.Entity):
     description = Required(str)
 
 
-class Bike_serial(db.Entity):
-    bike = Optional(Bike)
-    serial_number = PrimaryKey(int)
-
-
-class Rental_contract(db.Entity):
+class Rental_contract(db.Contract):
     customer = Required(Customer)
-    bill = Required("Bill")
-    contract = Required(Contract)
+    bill = Optional("Bill")
 
 
-class Repair_contract(db.Entity):
+class Repair_contract(db.Contract):
     mechanic = Optional(Mechanic)
     repair_report = Optional("Repair_report")
     done = Required(bool, default=False)
-    contract = Required(Contract)
 
 
 class Bill(db.Entity):
-    bill_id = PrimaryKey(int, auto=True)
     paid = Required(bool, default=False)
     amount = Required(Decimal)
-    rental_contract = Optional(Rental_contract)
+    rental_contract = PrimaryKey(Rental_contract)
     pay_date = Required(datetime)
 
 
 class Repair_report(db.Entity):
-    repair_report_id = PrimaryKey(int, auto=True)
-    repair_contract = Required(Repair_contract)
+    repair_contract = PrimaryKey(Repair_contract)
+    report_text = Required(str)
 
 
-class Admin(db.Entity):
-    manager = Required(Manager)
+class Admin(db.Manager):
+    pass
 
 
 sql_debug(True)
