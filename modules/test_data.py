@@ -44,6 +44,8 @@ def create_users(amount):
 
     admin = Admin(username="admin", salt=salt, password=password, first_name="cavin", last_name="hobbs", address=address, phone=phone, creation_date=datetime.now())
 
+def create_user():
+    pass
 if __name__ == "__main__":
     create_users(10)
     DB.commit()

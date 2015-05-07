@@ -187,3 +187,20 @@ WHERE "classtype" IN ('Manager', 'Admin', 'Mechanic', 'Customer', 'Employer', 'U
   AND "username" = %(p1)s
 INFO:root:auth - authenticate: stored_password=fa70be26dc53cb8794b9fa27363279db1d84da68c62f8762f1cde8daf260e703, stored_salt=toNVMMgkwcPLBuxk+aJpuA==, new_password=1234, _new=fa70be26dc53cb8794b9fa27363279db1d84da68c62f8762f1cde8daf260e703
 INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt", "classtype", "salary"
+FROM "user"
+WHERE "classtype" IN ('Employer', 'Admin', 'Manager', 'Mechanic', 'Customer', 'User')
+  AND "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e, stored_salt=VLnrGpJNsikXfw4lNOe4eQ==, new_password=1234, _new=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "address", "user_id", "creation_date", "username", "password", "salt", "classtype", "salary"
+FROM "user"
+WHERE "classtype" IN ('Employer', 'Admin', 'Manager', 'Mechanic', 'Customer', 'User')
+  AND "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e, stored_salt=VLnrGpJNsikXfw4lNOe4eQ==, new_password=1234, _new=4c2d0e08e1b8cd620b99df59a31826a6ba457c7eca9f469f7c9abcb3d22b9f7e
+INFO:pony.orm:RELEASE CONNECTION
