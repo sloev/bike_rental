@@ -7,16 +7,16 @@ Attributes:
   module_level_variable (int): description of variable
 """
 
+import logging
+
 import npyscreen
 
-from account import LoginForm, NewEmployeeForm
-from profile import CustomerProfile, AdminProfile, ManagerProfile, MechanicProfile
-
-import logging
+from bike_rental.cli.account import LoginForm, NewEmployeeForm
+from bike_rental.cli.profile import CustomerProfile, AdminProfile, ManagerProfile, MechanicProfile
 logging.basicConfig(filename='bike_rental.log', level=logging.INFO)
 logging.info('Started')
 
-class MyApplication(npyscreen.NPSAppManaged):
+class App(npyscreen.NPSAppManaged):
    def onStart(self):
        self.registerForm('MAIN', LoginForm())
        self.registerForm('Customer', CustomerProfile())
@@ -26,4 +26,4 @@ class MyApplication(npyscreen.NPSAppManaged):
        self.registerForm('NewEmployee', NewEmployeeForm())
 
 if __name__ == '__main__':
-    TestApp = MyApplication().run()
+    TestApp = App().run()

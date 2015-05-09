@@ -7,12 +7,14 @@ Attributes:
   module_level_variable (int): description of variable
 """
 
+from datetime import datetime
+
 import npyscreen
 
-from settings import *
-from models import User, Admin, Mechanic, Manager, Address, Phone
-from datetime import datetime
-import auth
+from bike_rental.settings import *
+from bike_rental.models import User, Admin, Mechanic, Manager, Address, Phone
+from bike_rental import auth
+
 
 class LoginForm(npyscreen.Form):
     def create(self):
@@ -93,7 +95,8 @@ class NewAccountForm(npyscreen.ActionForm):
         self.exit_editing()
 
     def on_cancel(self):
-        pass
+        self.parentApp.switchFormPrevious()
+        self.exit_editing()
 
     def _show_error_and_try_again(self):
         pass

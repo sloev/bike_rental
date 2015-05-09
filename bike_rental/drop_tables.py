@@ -1,7 +1,6 @@
 __author__ = 'johannes'
 
-from settings import DB
-import pony.orm as ponyorm
+from bike_rental.settings import DB
 #sfrom models import *
 print DB.generate_mapping(create_tables=True)
 def a():

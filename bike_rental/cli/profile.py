@@ -6,8 +6,10 @@ this module does a lot of things, you can use multilines and double newlines cre
 Attributes:
   module_level_variable (int): description of variable
 """
+
 import npyscreen
-from settings import *
+
+from bike_rental.settings import *
 
 class Profile(npyscreen.Form):
     def create(self):

@@ -2,9 +2,10 @@ __author__ = 'johannes'
 
 from datetime import datetime
 from decimal import Decimal
+
 from pony.orm import PrimaryKey,Required,Set, Optional, sql_debug
 
-from settings import DB as db
+from bike_rental.settings import DB as db
 
 
 class Address(db.Entity):

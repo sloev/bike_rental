@@ -1,16 +1,15 @@
 __author__ = 'johannes'
 # -*- coding: utf-8 -*-
 
-from settings import DB
-
-from models import *
-import pony.orm as ponyorm
-from pony.orm import Database, sql_debug
-from datetime import datetime
-
-
 from random import randint
-import auth
+
+import pony.orm as ponyorm
+
+from bike_rental.settings import DB
+from bike_rental import User, Admin, Address, Phone, Customer
+from bike_rental import auth
+
+from datetime import datetime
 
 @ponyorm.db_session
 def create_users(amount):
