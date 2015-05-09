@@ -2,25 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef8e0c23-c1d8-473d-8570-e83e5b537a85" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/appendices" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/bibliography" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/conclusion" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/introduction.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/problemsolution" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/bike_rental.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/cli/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/cli/__main__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/cli/account.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/cli/profile.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/app.py" afterPath="$PROJECT_DIR$/app.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/auth.py" afterPath="$PROJECT_DIR$/bike_rental/auth.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/drop_tables.py" afterPath="$PROJECT_DIR$/bike_rental/drop_tables.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/models.py" afterPath="$PROJECT_DIR$/bike_rental/models.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/settings.py" afterPath="$PROJECT_DIR$/bike_rental/settings.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/test_data.py" afterPath="$PROJECT_DIR$/bike_rental/test_data.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/bike_rental.iml" afterPath="$PROJECT_DIR$/.idea/bike_rental.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/bike_rental.log" afterPath="$PROJECT_DIR$/docs/bike_rental.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/introduction.rst" afterPath="$PROJECT_DIR$/docs/introduction.rst" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/problemsolution" afterPath="$PROJECT_DIR$/docs/problemsolution" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bike_rental.iws" />
@@ -88,8 +72,8 @@
       <file leaf-file-name="problemsolution" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/problemsolution">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.91655076" vertical-offset="421" max-vertical-offset="1185">
-              <caret line="72" column="55" selection-start-line="72" selection-start-column="55" selection-end-line="72" selection-end-column="55" />
+            <state vertical-scroll-proportion="0.62447846" vertical-offset="721" max-vertical-offset="1455">
+              <caret line="78" column="49" selection-start-line="78" selection-start-column="49" selection-end-line="78" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -98,8 +82,8 @@
       <file leaf-file-name="introduction.rst" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/docs/introduction.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="106" max-vertical-offset="825">
-              <caret line="29" column="21" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="855">
+              <caret line="37" column="88" selection-start-line="37" selection-start-column="88" selection-end-line="37" selection-end-column="88" />
               <folding />
             </state>
           </provider>
@@ -1065,16 +1049,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/introduction.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="106" max-vertical-offset="825">
-          <caret line="29" column="21" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="855">
+          <caret line="37" column="88" selection-start-line="37" selection-start-column="88" selection-end-line="37" selection-end-column="88" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/problemsolution">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.91655076" vertical-offset="421" max-vertical-offset="1185">
-          <caret line="72" column="55" selection-start-line="72" selection-start-column="55" selection-end-line="72" selection-end-column="55" />
+        <state vertical-scroll-proportion="0.62447846" vertical-offset="721" max-vertical-offset="1455">
+          <caret line="78" column="49" selection-start-line="78" selection-start-column="49" selection-end-line="78" selection-end-column="49" />
           <folding />
         </state>
       </provider>

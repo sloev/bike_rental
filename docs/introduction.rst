@@ -5,6 +5,8 @@ Introduction
 This report will describe the the creation of a database system for a bike rental company called "Wheels".
 "Wheels" is a company renting out bikes and its staff includes managers that take care of customers and mechanics
 that take care of bikes.
+The "Wheels" company currently only have a single shop featuring three mechanics, four managers where one of them are admins.
+They hold 20 bikes, and have 35 customers.
 
 Problem formulation
 -------------------
