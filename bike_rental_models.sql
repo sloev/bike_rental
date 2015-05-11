@@ -14,13 +14,12 @@ create schema details;
 create schema shops;
 	create table shops.shop(
 		shop_id serial primary key,
-		rent int not null,
-		address_id int not null references details.address(address_id),
-		phone_number int not null references details.phone(number) 
+		rent int,
+		address_id int references details.address(address_id),
+		phone_number int references details.phone(number) 
 	);
 
 create schema users;
-	
 	create table users.user(
 		user_id serial primary key,
 		first_name text not null,
@@ -33,21 +32,30 @@ create schema users;
 	);
 	
 	create table users.employee(
+		user_id integer primary key references users.user(user_id),
 		salary integer not null,
 		shop_id integer references shops.shop(shop_id)
-	) inherits (users.user);
+	);
 
 	create table users.mechanic(
+		user_id integer primary key references users.user(user_id),
 		educated bool not null
-	) inherits (users.employee);
+	);
 
 	create table users.manager(
+		user_id integer primary key references users.user(user_id),
 		senior bool not null
-	) inherits (users.employee);
+	);
 
 	create table users.admin(
-		admin_by_admin int references users.user(user_id)
-	) inherits (users.manager);
+		user_id integer primary key references users.user(user_id),
+		admin_by_admin integer references users.user(user_id)
+	);
+	
+	create table users.customer(
+		user_id integer primary key references users.user(user_id),
+		customer_id serial primary key
+	);
 
 create schema bikes;	
 	create table bikes.type(
@@ -67,11 +75,16 @@ create schema bikes;
 	);
 	
 create schema contracts;
+	create table contracts.type(
+		type_id serial primary key,
+		name text not null
+	);
 	create table contracts.contract(
 		contract_id serial primary key,
 		begin_date date not null,
 		end_date date not null,
 		bike_serial int references bikes.bike(serial_number)
+		type_id integer references contracts.type(type_id)
 	);
 	
 	create table contracts.bill(
@@ -82,20 +95,25 @@ create schema contracts;
 	);
 	
 	create table contracts.rental(
+		contract_id integer primary key references contracts.contract(contract_id)
 		bill_id int references contracts.bill(bill_id),
-		manager_id int  references users.user(user_id)
-	)inherits (contracts.contract);
+		manager_id int  references users.manager(user_id)
+	)
 	
 	create table contracts.repair(
+		contract_id integer primary key references contracts.contract(contract_id)
 		mechanic_id int references users.user(user_id),
 		report_id int references bikes.report(report_id)
-	)inherits (contracts.contract);
-	
-
-
+	)
 	
 insert into users.employee (first_name, last_name, username, password, salt,salary) values ('lol', 'cat','johannesgj', '1234','salt', 123);
-
+	
+	insert into shops.shop values(1);
+insert into users.user (first_name, last_name, username, password, salt) values ('lol', 'cat','johannesgj', '1234','salt');
+	insert into shops.shop values(1);
+		insert into users.employee values(1,1,1);
+			select p.relname, c.user_id, c.first_name, c.username, c.password, b.salary from users.user c, users.employee b, pg_class p  where c.user_id = b.user_id and p.oid = b.tableoid;
+			
 select p.relname, c.user_id, c.first_name, c.username, c.password from users.user c, pg_class p  where user_id = 1 and  p.oid = c.tableoid;
 select c.user_id, c.salary from users.employee c where  c.user_id = 1;
 
