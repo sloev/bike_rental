@@ -6,26 +6,15 @@
 Contents
 ======================================
 
-.. raw:: latex
-
-    \newpage
-
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   problemsolution
    introduction
-   usage
-   contributing
-   authors
-   history
+   problemsolution
+   conclusion
+   bibliography
+   appendices
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

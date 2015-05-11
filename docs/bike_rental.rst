@@ -19,14 +19,6 @@ bike_rental.auth module
     :undoc-members:
     :show-inheritance:
 
-bike_rental.drop_tables module
-------------------------------
-
-.. automodule:: bike_rental.drop_tables
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 bike_rental.models module
 -------------------------
 

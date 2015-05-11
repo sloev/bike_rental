@@ -78,14 +78,5 @@ employees compared to customers. And the scale between the different subclasses 
 
 My final user model can be represented like this:
 
-TODO: image
-
-            user
-       /             \
-       employee       customer
-       |
-       |- manager
-       |- admin
-       |- mechanic
 
 

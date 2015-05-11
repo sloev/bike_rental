@@ -26,3 +26,41 @@ WHERE "classtype" IN ('Manager', 'Admin', 'Mechanic', 'Employee')
   AND "user" = %(p1)s
 LIMIT 2
 INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:pony.orm:GET CONNECTION FROM THE LOCAL POOL
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION
+INFO:root:Started
+INFO:pony.orm:GET NEW CONNECTION
+INFO:pony.orm:SWITCH TO AUTOCOMMIT MODE
+INFO:pony.orm.sql:SELECT "first_name", "last_name", "user_id", "creation_date", "username", "password", "salt", "address"
+FROM "user"
+WHERE "username" = %(p1)s
+INFO:root:auth - authenticate: stored_password=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1, stored_salt=tpwdvaVAM6dHhuj+JTfB+w==, new_password=1234, _new=d12df2797f3c241f406aaacd5beafba2f828c2fb761b15470ca5456234fcb1e1
+INFO:pony.orm.sql:SELECT "salary", "employer_id", "user", "classtype"
+FROM "employee"
+WHERE "classtype" IN ('Manager', 'Mechanic', 'Admin', 'Employee')
+  AND "user" = %(p1)s
+LIMIT 2
+INFO:pony.orm:RELEASE CONNECTION

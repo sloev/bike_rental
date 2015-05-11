@@ -71,3 +71,6 @@ install: clean
 
 live:
 	$(MAKE) -C docs live
+
+pdf:
+	$(MAKE) -C docs pdf

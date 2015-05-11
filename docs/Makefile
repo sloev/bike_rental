@@ -179,3 +179,8 @@ pseudoxml:
 live:
 	open "http://127.0.0.1:9999"
 	sphinx-autobuild -p 9999  -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+
+pdf:
+	@echo "makin pdf especially for you!"
+	$(SPHINXBUILD) -bpdf $(ALLSPHINXOPTS) $(BUILDDIR)/pdf
+	open $(BUILDDIR)/pdf/Bikerentalreport.pdf
