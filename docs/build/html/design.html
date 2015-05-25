@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Bike rental 1 documentation" href="index.html" />
-    <link rel="next" title="Problem solution" href="problemsolution.html" />
-    <link rel="prev" title="Introduction" href="introduction.html" />
+    <link rel="next" title="implementation" href="implementation.html" />
+    <link rel="prev" title="Process" href="process.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -39,10 +39,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="problemsolution.html" title="Problem solution"
+          <a href="implementation.html" title="implementation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="introduction.html" title="Introduction"
+          <a href="process.html" title="Process"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Bike rental 1 documentation</a> &raquo;</li> 
       </ul>
@@ -55,52 +55,14 @@
             
   <div class="section" id="design">
 <h1>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h1>
-<p>I started this project from the Python point of view. Which meant i focussed on how i would implement the application and secondary the application.</p>
-<p>This proved early to be a wrong decision. Signs of this showed through my use of object relational mapping frameworks such as Pony ORM for python.
-Nothing is wrong with Pony ORM if you want to degrade your database to secondary citizen in the system.
-However since this class is about database design i wanted to focus on the development of a data centric system with lower priority on the implementation of the application layer.</p>
-<p>In the start i had developed a schematic representation full of inheritance since i come from object oriented programming paradigms.</p>
-<p>I wanted different roles for users in my system and wanted to be able to restrict actions based on these rules. Pony ORM gave me easy inheritance so i could implement a base user with details like password, username, address etc and then inherit from that user in my employee and customer. Admins, mechanics and managers would then inherit from the employee and so forth. Before long i recognized i needed to see which kind of tables Pony ORM were generating and i was horrorfied to see that it used table per hierachy inheritance.</p>
-<p>As i said before inheritance is not a database concept in the normal sense. Postgresql has implemented inheritance but it lacks a lot of important functionality and is in general not recommended, they even have a disclaimer in their documentation telling of the faulty implementation <a class="footnote-reference" href="#postgresql-inheritance" id="id1">[2]</a>.</p>
-<p>In normal sql you implement inheritance by going with one of two popular concepts:</p>
-<ul class="simple">
-<li>Table per hierachy</li>
-<li>Table per type</li>
-</ul>
-<div class="section" id="table-per-hierarchy-inheritance">
-<h2>Table Per Hierarchy Inheritance<a class="headerlink" href="#table-per-hierarchy-inheritance" title="Permalink to this headline">¶</a></h2>
-<p>You implement all attributes of all children in a single table with an extra attribute telling the kind of child.</p>
-<p>Requires the application to implement logic that creates a meta layer over the existing table. This meta layer will differentiate the
-table into virtual sub tables, and know which attributes belong to which subclasses. This is not trivial.
-Might suffer in speed if there is not equality between the quantity of the children.</p>
-<p>For example if parent a hast 10 children, where 9 of them are of type b and one of them is of type a. Then in worst case you could say that
-the database would have to go through one miss before finding 9 hits if searching for type b, which is regarded as fast.
-But it would have to go through 9 miss before finding 1 hit if searching for type a, which is awful.</p>
-<p>Since the table must have all attributes for all sub classes it cant have required attributes that are not shared by all children.
-This leaves a lot of validation to the application.</p>
-<p>Creation/deletion of new types of subclasses would require mangling with the whole table including and potentially
-adding/removing attributes from all instances of all subclasses.</p>
-</div>
-<div class="section" id="table-per-type-inheritance">
-<h2>Table Per Type Inheritance<a class="headerlink" href="#table-per-type-inheritance" title="Permalink to this headline">¶</a></h2>
-<p>Or you create an abstract parent implementing all common attributes of its children and then create a specific table for
-each kind of child with a reference to its parent.
-You could have an abstract employee table that held all information shared by employees like salary, employer-id etc.
-And then create a new table pr type of child all having a reference to a unique row in the parent.</p>
-<p>Requires the application to join data from multiple tables pr query. One join pr level of inheritance at the least. This is a trivial task but reduces speed pr query.</p>
-<table class="docutils footnote" frame="void" id="sql-antipatterns" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td><a class="reference external" href="https://pragprog.com/book/bksqla/sql-antipatterns">https://pragprog.com/book/bksqla/sql-antipatterns</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="postgresql-inheritance" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[2]</a></td><td>ndosn</td></tr>
-</tbody>
-</table>
-</div>
+<p>The database is designed around the users. Different users create contracts between eachother regarding bikes.</p>
+<p>The users are the central aspect and they are represented by a base user table with an attribute telling their type.
+A table exist for customer specific attributes as well as employee specific attributes. Each have the users.user_id foreign key as their primary key.</p>
+<p>The contracts are the glue between users and bikes.
+At least two kinds of contracts can exist, the rental and the repair contract. All contracts hold the same info and the ability to add a report, could be a repair report. A contract has an attribute telling which type it is. This can be used to discriminate from an application on which users can access which kinds of contracts.</p>
+<p>The <em>contracts.assigned_to</em> table tells of which users are assigned to which contracts. All contracts has to be assigned an employee but only <em>rental_contracts</em> require a customer. The design is flexible enough to allow for new kinds of contracts to be introduced as the <em>contract_types</em> table functions as a lookup table to figure out which other table you should look in to find additional information regarding a custom contract.</p>
+<p>A bike is conceptualized as a combination between a unique serial number and some type specific details.
+I decided to place the details in their own table, since they can be shared by many bikes, and use the serial number as the primary key.</p>
 </div>
 
 
@@ -109,21 +71,12 @@ And then create a new table pr type of child all having a reference to a unique 
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Design</a><ul>
-<li><a class="reference internal" href="#table-per-hierarchy-inheritance">Table Per Hierarchy Inheritance</a></li>
-<li><a class="reference internal" href="#table-per-type-inheritance">Table Per Type Inheritance</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="previous chapter">Introduction</a></p>
+  <p class="topless"><a href="process.html"
+                        title="previous chapter">Process</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="problemsolution.html"
-                        title="next chapter">Problem solution</a></p>
+  <p class="topless"><a href="implementation.html"
+                        title="next chapter">implementation</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">

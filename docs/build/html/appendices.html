@@ -55,74 +55,574 @@
 <h2>Hashing<a class="headerlink" href="#hashing" title="Permalink to this headline">¶</a></h2>
 <p>The following hashing functionality was implemented in python as a module.
 <em>_</em> is used as a descriptor for private, <em>internal</em>, functions.</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+</div>
+<div class="section" id="proposed-projects">
+<h2>Proposed projects<a class="headerlink" href="#proposed-projects" title="Permalink to this headline">¶</a></h2>
+<p>In the beginning i wanted to extend a project i had been working on for a year called <em>&#8220;the obama puppet&#8221;</em>.
+The project was a database system where a application would analyse president Obama&#8217;s weekly addresses and cut every word out as a video sample. These samples would then be saved in a postgresql database and a Procedural Language function would be able to generate a new video from a query based on the stored samples.</p>
+<p>I went through with the project but realized too late that it didn&#8217;t involve enough interesting aspects regarding the database. I set the project on pause for a day and evaluated which features could extend it into a full database project and realized it would be more work than starting a new project instead.</p>
+<p>The <em>&#8220;obama puppet&#8221;</em> was terminated right after i had implemented a twitter bot for it, allowing everybody to let him speak their speeches.</p>
+<p>It can be found at:
+<a class="reference external" href="http://github.com/sloev/obama-puppet">http://github.com/sloev/obama-puppet</a></p>
+</div>
+<div class="section" id="inheritance-in-sql">
+<h2>Inheritance in sql<a class="headerlink" href="#inheritance-in-sql" title="Permalink to this headline">¶</a></h2>
+<p>In general two kinds of inheritance exist in sql. Each have their downsides but both are generally seen as antipatterns where you develop the database from an object oriented paradigm instead of a relational database system paradigm.</p>
+<div class="section" id="table-per-hierarchy-inheritance">
+<h3>Table Per Hierarchy Inheritance<a class="headerlink" href="#table-per-hierarchy-inheritance" title="Permalink to this headline">¶</a></h3>
+<p>You implement all attributes of all children in a single table with an extra attribute telling the kind of child.</p>
+<p>Requires the application to implement logic that creates a meta layer over the existing table. This meta layer will differentiate the
+table into virtual sub tables, and know which attributes belong to which subclasses. This is not trivial.
+Might suffer in speed if there is not equality between the quantity of the children.</p>
+<p>For example if parent a hast 10 children, where 9 of them are of type b and one of them is of type a. Then in worst case you could say that
+the database would have to go through one miss before finding 9 hits if searching for type b, which is regarded as fast.
+But it would have to go through 9 miss before finding 1 hit if searching for type a, which is awful.</p>
+<p>Since the table must have all attributes for all sub classes it cant have required attributes that are not shared by all children.
+This leaves a lot of validation to the application.</p>
+<p>Creation/deletion of new types of subclasses would require mangling with the whole table including and potentially
+adding/removing attributes from all instances of all subclasses.</p>
+</div>
+<div class="section" id="table-per-type-inheritance">
+<h3>Table Per Type Inheritance<a class="headerlink" href="#table-per-type-inheritance" title="Permalink to this headline">¶</a></h3>
+<p>Or you create an abstract parent implementing all common attributes of its children and then create a specific table for
+each kind of child with a reference to its parent.
+You could have an abstract employee table that held all information shared by employees like salary, employer-id etc.
+And then create a new table pr type of child all having a reference to a unique row in the parent.</p>
+<p>Requires the application to join data from multiple tables pr query. One join pr level of inheritance at the least. This is a trivial task but reduces speed pr query.</p>
+</div>
+</div>
+<div class="section" id="setup-script">
+<h2>Setup script<a class="headerlink" href="#setup-script" title="Permalink to this headline">¶</a></h2>
+<p>The following script is used to construct all tables, functions, schemas etc for the system.</p>
+<div class="highlight-sql"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249</pre></div></td><td class="code"><div class="highlight"><pre>create schema details;
+	create table details.address(
+		address_id serial primary key,
+		street_name text not null,
+		street_number int not null,
+		zip int not null,
+		city text not null,
+		unique (street_name, street_number, zip, city)
+	);
+	
+	create table details.phone(
+		phone_number int unique not null
+	);
+	
+create schema shops;
+	create table shops.shop(
+		shop_id serial primary key,
+		rent int not null,
+		address_id int not null references details.address(address_id),
+		phone_number int not null references details.phone(phone_number) 
+	);
 
-<span class="k">def</span> <span class="nf">create_password_from_clear</span><span class="p">(</span> <span class="n">password</span><span class="p">):</span>
-    <span class="n">salt</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
-    <span class="n">_password</span> <span class="o">=</span> <span class="n">_encrypt_password</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">salt</span><span class="p">,</span> <span class="n">_password</span>
+create schema users;
+	create table users.types(
+		type_id serial primary key,
+		type_name text not null unique
+	);
+	create table users.user(
+		user_id serial primary key,
+		first_name text not null,
+		last_name text not null,
+		username text not null unique,
+		salt text not null,
+		password text not null,
+		address_id int not null references details.address(address_id),
+		phone_id int references details.phone(phone_number),
+		creation_date date not null default CURRENT_DATE,
+		type int not null references users.types(type_id)
+	);
 
-<span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="n">stored_password</span><span class="p">,</span> <span class="n">stored_salt</span><span class="p">,</span> <span class="n">new_password</span><span class="p">):</span>
+	create table users.customer(
+		erhverv bool default false,
+		user_id int primary key references users.user(user_id)
+	);
+	
 
-    <span class="n">_new_password</span> <span class="o">=</span> <span class="n">_encrypt_password</span><span class="p">(</span><span class="n">stored_salt</span><span class="p">,</span> <span class="n">new_password</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_new_password</span> <span class="o">==</span> <span class="n">stored_password</span>
 
-<span class="k">def</span> <span class="nf">_encrypt_password</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+	create table users.employee(
+		salary integer not null,
+		shop_id integer references shops.shop(shop_id),
+		user_id int primary key references users.user(user_id)
+	);
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">password_bytes</span> <span class="o">=</span> <span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">password_bytes</span> <span class="o">=</span> <span class="n">password</span>
 
-    <span class="n">hashed_password</span> <span class="o">=</span> <span class="n">sha256</span><span class="p">()</span>
-    <span class="n">hashed_password</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">password_bytes</span><span class="p">)</span>
-    <span class="n">hashed_password</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span>
-    <span class="n">hashed_password</span> <span class="o">=</span> <span class="n">hashed_password</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hashed_password</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">hashed_password</span> <span class="o">=</span> <span class="n">hashed_password</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">hashed_password</span>
+
+create schema bikes;	
+	create table bikes.type(
+		type_id serial primary key,
+		description text not null,
+		color text not null
+	);
+	create table bikes.bike(
+		serial_number serial primary key,
+		bike_type int references bikes.type(type_id)	
+	);
+
+	
+create schema contracts;
+	create table contracts.contract_types(
+		type_id serial primary key,
+		type_name text not null
+	);
+
+	create table contracts.contract(
+		contract_id serial primary key,
+		begin_date date not null,
+		end_date date not null,
+		bike_serial int references bikes.bike(serial_number),
+		type_id int references contracts.contract_types(type_id)
+	);
+
+	create table contracts.rental_contract(
+		contract_id int primary key references contracts.contract(contract_id),
+		customer_id int references users.user(user_id)
+	);
+	create table contracts.report(
+		report_id serial primary key,
+		serial_number int references bikes.bike(serial_number),
+		report_text text not null
+	);
+
+	create table contracts.repair_contract(
+		contract_id int primary key references contracts.contract(contract_id),
+		report_id int references contracts.report(report_id)
+	);
+
+	create table contracts.assigned_to(
+		contract_id int primary key references contracts.contract(contract_id),
+		employee_id int not null references users.user(user_id)
+	);
+	
+	create table contracts.bill(
+		contract_id int primary key references contracts.contract(contract_id),
+		paid bool default false,
+		amount int not null,
+		pay_date date not null
+	);
+
+
+
+
+create schema functions;
+
+create language plpythonu;
+
+CREATE TYPE functions.login_type AS (
+  username text,
+  user_id integer,
+  first_name text,
+  last_name text,
+  password text,
+  salt text,
+  type_name text,
+  erhverv boolean,
+  salary integer,
+  shop_id integer,
+  street_name text,
+  street_number integer,
+  zip integer,
+  city text,
+  phone_number int
+);
+
+
+CREATE OR REPLACE FUNCTION functions.login (username text, password text)
+  RETURNS functions.login_type
+AS $$
+
+from base64 import b64encode
+from hashlib import sha256
+
+def authenticate(stored_password, stored_salt, new_password):
+
+    _new_password = _encrypt_password(stored_salt, new_password)
+    return _new_password == stored_password
+
+def _encrypt_password(salt, password):
+
+    if isinstance(password, str):
+        password_bytes = password.encode(&quot;UTF-8&quot;)
+    else:
+        password_bytes = password
+
+    hashed_password = sha256()
+    hashed_password.update(password_bytes)
+    hashed_password.update(salt)
+    hashed_password = hashed_password.hexdigest()
+    if not isinstance(hashed_password, str):
+        hashed_password = hashed_password.decode(&quot;UTF-8&quot;)
+    return hashed_password
+
+
+query = &quot;&quot;&quot;
+select u.username, u.user_id, u.first_name, u.last_name, u.password, u.salt,
+	t.type_name,
+	c.erhverv,
+	e.salary, e.shop_id,
+	a.street_name, a.street_number, a.zip, a.city,
+	p.phone_number 
+from 
+	users.user u
+left join 
+	users.customer c 
+on 
+	u.user_id = c.user_id
+left join
+	users.employee e
+on 
+	u.user_id = e.user_id
+left join 
+	details.phone p
+on 
+	p.phone_number = u.phone_id
+
+left join
+	details.address a
+on 
+	a.address_id = u.address_id
+left join
+	users.types t
+on
+	u.type = t.type_id
+where u.username = \&#39;%s\&#39;
+&quot;&quot;&quot; % username
+
+rows = plpy.execute(query)
+
+#if results have at least one row
+if len(rows) &gt; 0:
+    row = rows[0]
+    #if the results salt and input password is equal to results password
+    if authenticate(row[&#39;password&#39;], row[&#39;salt&#39;], password):
+    	#then return all fields from query
+        return row
+#else return null for all fields
+return [None] * 15
+
+$$ LANGUAGE plpythonu;
+
+CREATE OR REPLACE FUNCTION functions.update_login (username text, password text)
+  RETURNS text
+AS $$
+from base64 import b64encode
+import os
+from hashlib import sha256
+
+def create_password_from_clear( password):
+    salt = b64encode(os.urandom(16))
+    _password = _encrypt_password(salt, password)
+    return salt, _password
+
+def _encrypt_password(salt, password):
+
+    if isinstance(password, str):
+        password_bytes = password.encode(&quot;UTF-8&quot;)
+    else:
+        password_bytes = password
+
+    hashed_password = sha256()
+    hashed_password.update(password_bytes)
+    hashed_password.update(salt)
+    hashed_password = hashed_password.hexdigest()
+    if not isinstance(hashed_password, str):
+        hashed_password = hashed_password.decode(&quot;UTF-8&quot;)
+    return hashed_password
+
+salt, new_password = create_password_from_clear(password)
+query = &quot;&quot;&quot;
+UPDATE users.user SET
+salt = \&#39;%s\&#39;,  
+password = \&#39;%s\&#39; 
+WHERE username = \&#39;%s\&#39;;
+&quot;&quot;&quot; % (salt, new_password, username)
+records = plpy.execute(query)
+if records.nrows():
+    return &quot;OK&quot;
+return &quot;ERROR&quot;
+
+$$ LANGUAGE plpythonu;
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="test-data">
-<h2>Test data<a class="headerlink" href="#test-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="drop-script">
+<h2>Drop script<a class="headerlink" href="#drop-script" title="Permalink to this headline">¶</a></h2>
+<p>This script is used to drop all related to this project.</p>
+<div class="highlight-sql"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">drop</span> <span class="k">schema</span> <span class="n">users</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">schema</span> <span class="n">shops</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">schema</span> <span class="n">details</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">schema</span> <span class="n">bikes</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">schema</span> <span class="n">contracts</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">type</span> <span class="n">functions</span><span class="p">.</span><span class="n">login_type</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">schema</span> <span class="n">functions</span> <span class="k">cascade</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">language</span> <span class="n">plpythonu</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="test-script">
+<h2>Test script<a class="headerlink" href="#test-script" title="Permalink to this headline">¶</a></h2>
 <p>All examples in this project are based on the following <em>test.sql</em> sql script. When run it will insert:</p>
 <ul class="simple">
 <li>Some addresses</li>
 <li>Some phone numbers</li>
 <li>A shop</li>
-<li>4 users, on of each kind</li>
+<li>4 users: customer, manager, mechanic, admin</li>
 </ul>
 <div class="highlight-sql"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -173,7 +673,47 @@
 47
 48
 49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">insert</span> <span class="k">into</span> <span class="n">users</span><span class="p">.</span><span class="n">types</span> <span class="p">(</span><span class="n">type_name</span><span class="p">)</span> <span class="k">values</span>
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">insert</span> <span class="k">into</span> <span class="n">users</span><span class="p">.</span><span class="n">types</span> <span class="p">(</span><span class="n">type_name</span><span class="p">)</span> <span class="k">values</span>
 	<span class="p">(</span><span class="s1">&#39;customer&#39;</span><span class="p">),</span>
 	<span class="p">(</span><span class="s1">&#39;mechanic&#39;</span><span class="p">),</span>
 	<span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">),</span>
@@ -223,6 +763,46 @@
 <span class="k">insert</span> <span class="k">into</span> <span class="n">users</span><span class="p">.</span><span class="n">customer</span> <span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="k">values</span>
 	<span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="n">returning</span> <span class="o">*</span> <span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">bikes</span><span class="p">.</span><span class="k">type</span> <span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="k">values</span>
+	<span class="p">(</span><span class="s1">&#39;tall and fast&#39;</span><span class="p">,</span> <span class="s1">&#39;#ff00ee&#39;</span><span class="p">),</span>
+	<span class="p">(</span><span class="s1">&#39;long and comfortable&#39;</span><span class="p">,</span> <span class="s1">&#39;#ffddaa&#39;</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">bikes</span><span class="p">.</span><span class="n">bike</span><span class="p">(</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">bike_type</span><span class="p">)</span> <span class="k">values</span>
+	<span class="p">(</span><span class="mi">12435542</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+	<span class="p">(</span><span class="mi">5467332</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+	<span class="p">(</span><span class="mi">1122134</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+	<span class="p">(</span><span class="mi">987786333</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+	<span class="p">(</span><span class="mi">54637281</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">contracts</span><span class="p">.</span><span class="n">contract_types</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+	<span class="k">values</span>
+	<span class="p">(</span><span class="s1">&#39;rental&#39;</span><span class="p">),</span>
+	<span class="p">(</span><span class="s1">&#39;repair&#39;</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span> <span class="p">;</span>
+
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">contracts</span><span class="p">.</span><span class="n">contract</span> <span class="p">(</span><span class="n">begin_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">bike_serial</span><span class="p">,</span> <span class="n">type_id</span><span class="p">)</span> 
+	<span class="k">values</span>
+	<span class="p">(</span><span class="s1">&#39;1/9/2014&#39;</span><span class="p">,</span> <span class="s1">&#39;1/1/2014&#39;</span><span class="p">,</span> <span class="mi">12435542</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">contracts</span><span class="p">.</span><span class="n">rental_contract</span><span class="p">(</span><span class="n">contract_id</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">)</span>
+	<span class="k">values</span>
+	<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">contracts</span><span class="p">.</span><span class="n">bill</span><span class="p">(</span><span class="n">contract_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">pay_date</span><span class="p">)</span>
+	<span class="k">values</span>
+	<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;1/12/2014&#39;</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">contracts</span><span class="p">.</span><span class="n">assigned_to</span><span class="p">(</span><span class="n">contract_id</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">)</span>
+	<span class="k">values</span>
+	<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+	<span class="n">returning</span> <span class="o">*</span><span class="p">;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -238,7 +818,15 @@
   <ul>
 <li><a class="reference internal" href="#">Appendices</a><ul>
 <li><a class="reference internal" href="#hashing">Hashing</a></li>
-<li><a class="reference internal" href="#test-data">Test data</a></li>
+<li><a class="reference internal" href="#proposed-projects">Proposed projects</a></li>
+<li><a class="reference internal" href="#inheritance-in-sql">Inheritance in sql</a><ul>
+<li><a class="reference internal" href="#table-per-hierarchy-inheritance">Table Per Hierarchy Inheritance</a></li>
+<li><a class="reference internal" href="#table-per-type-inheritance">Table Per Type Inheritance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setup-script">Setup script</a></li>
+<li><a class="reference internal" href="#drop-script">Drop script</a></li>
+<li><a class="reference internal" href="#test-script">Test script</a></li>
 </ul>
 </li>
 </ul>

@@ -10,8 +10,10 @@ Bike rental report
    :maxdepth: 2
 
    introduction
+   process
    design
-   problemsolution
+   implementation
+   normalization
    conclusion
    bibliography
    appendices

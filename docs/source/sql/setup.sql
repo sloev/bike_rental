@@ -64,24 +64,39 @@ create schema bikes;
 		bike_type int references bikes.type(type_id)	
 	);
 
-	create table bikes.report(
-		report_id serial primary key,
-		serial_number int references bikes.bike(serial_number),
-		report_text text not null
-	);
 	
 create schema contracts;
+	create table contracts.contract_types(
+		type_id serial primary key,
+		type_name text not null
+	);
+
 	create table contracts.contract(
 		contract_id serial primary key,
 		begin_date date not null,
 		end_date date not null,
 		bike_serial int references bikes.bike(serial_number),
-		report_id int references bikes.report(report_id)
+		type_id int references contracts.contract_types(type_id)
+	);
+
+	create table contracts.rental_contract(
+		contract_id int primary key references contracts.contract(contract_id),
+		customer_id int references users.user(user_id)
+	);
+	create table contracts.report(
+		report_id serial primary key,
+		serial_number int references bikes.bike(serial_number),
+		report_text text not null
+	);
+
+	create table contracts.repair_contract(
+		contract_id int primary key references contracts.contract(contract_id),
+		report_id int references contracts.report(report_id)
 	);
 
 	create table contracts.assigned_to(
 		contract_id int primary key references contracts.contract(contract_id),
-		employee_id int references users.employee(user_id)
+		employee_id int not null references users.user(user_id)
 	);
 	
 	create table contracts.bill(
@@ -91,10 +106,8 @@ create schema contracts;
 		pay_date date not null
 	);
 
-	create table contracts.contract_types(
-		type_id serial primary key,
-		type_name text not null
-	);
+
+
 
 create schema functions;
 

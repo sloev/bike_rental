@@ -49,5 +49,46 @@ insert into users.customer (user_id) values
 	(2)
 	returning * ;
 
+insert into bikes.type (description, color) values
+	('tall and fast', '#ff00ee'),
+	('long and comfortable', '#ffddaa')
+	returning *;
+
+insert into bikes.bike(serial_number, bike_type) values
+	(12435542, 1),
+	(5467332, 1),
+	(1122134, 2),
+	(987786333, 1),
+	(54637281, 2)
+	returning *;
+
+insert into contracts.contract_types(type_name)
+	values
+	('rental'),
+	('repair')
+	returning * ;
+
+
+insert into contracts.contract (begin_date, end_date, bike_serial, type_id) 
+	values
+	('1/9/2014', '1/1/2014', 12435542, 1)
+	returning *;
+
+insert into contracts.rental_contract(contract_id, customer_id)
+	values
+	(1, 2)
+	returning *;
+
+insert into contracts.bill(contract_id, amount, pay_date)
+	values
+	(1, 100, '1/12/2014')
+	returning *;
+
+insert into contracts.assigned_to(contract_id, employee_id)
+	values
+	(1, 4)
+	returning *;
+
+
 
 
