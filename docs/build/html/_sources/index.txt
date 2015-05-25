@@ -10,6 +10,7 @@ Bike rental report
    :maxdepth: 2
 
    introduction
+   design
    problemsolution
    conclusion
    bibliography

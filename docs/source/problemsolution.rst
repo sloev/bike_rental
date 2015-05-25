@@ -1,119 +1,127 @@
-================
 Problem solution
 ================
 
-Design
-------
+I will here go through the different tables with a focus on the most complex functionality.
+All examples depend on the execution of the *test.sql* script found in the appendice.
 
-.. image:: _static/conceptual_er.png
+Users
+-----
 
-Above you see an image of the conceptual schema created for this project.
-The schema describes interactions, entities, their data and their relations in a nonformal matter.
+The *user* table holds all attributes held by all users. The attributes hold personal data such as contact information as well as system critical data such as usernames and passwords.
+
+The *user* table hold three foreign keys:
+
+**address_id**
+	An int pointing to an address record
+**phone_id**
+	An int pointing to a phone number
+**type**
+	An int pointing to a *users.type* record
+
+The *type* attribute is special since it acts as a descriminator in the application layer.
+The application layer will descriminate different functionalities based on which user type you pocess.
+
+Security
+''''''''
+
+I wanted a secure way of logging in so i implemented password hashing so the database only stores hashed passwords.
+When you hash passwords you use a random salt to make a hash digest of a clear text password. The output password is regarded as inreversable and secure however you have to store the random salt in order to verify future clear text passwords against the stored password hash.
+
+If the connection to the database is secure, then my implementation is also secure or at least standard.
+
+The diagram below describes the process where the application layer is:
+
+* Creating a user
+* Updating the user with a hashed password
+* Authenticating the user through the database with a clear text password.
+
+.. figure:: /images/login_seq.png
+   :figwidth: 90%
+   :scale: 200%
+
+   Diagram shows the creation of user, the updating of a user's password and the authentication of a user.
+
+.. comment
+   .. seqdiag::
+      seqdiag {
+      application => postgresql [label = "all data regarding a user was entered to the system"];
+      === Change password ===
+      application -> postgresql [label = "select * from\nfunctions.update_login('admin', 
+      '1234'"];
+      postgresql -> postgresql [label = "python:\ngenerate salt\n\ncompute hash from password and salt\n\nstore hash and salt"]
+      application <- postgresql [label = "OK"];
+      === Log in ===
+      application -> postgresql [label = "select * from\nfunctions.login('admin', '1234'"];
+      postgresql -> postgresql [label = "python:\nquery user\n\ncompute password from stored salt and given password\n\ncompare stored password with computed password"]
+      application <- postgresql [label = "response = all details on user"];
+      }
+
+I chose to implement the above functionality in python and use the python procedural language for postgresql for execution.
+I wanted the functionality as a stored procedure so it didn't affect my database design.
+
+If i wanted a function to return a predecided set of attributes i needed a custom type. Postgresqls PL lets you return composite attributes only if you have defined a *"holder"* type for these. The following *login_type* was developed for the *login* function.
+
+.. literalinclude:: login.py
+   :language: sql
+   :linenos:
+   :lines: 7-24
+
+I developed an authentication python module with the needed functions for creating hashes and so forth. But i did not install it system wide so my two sotred procedures, *login* and *update_login*, each have it embedded in their source.
+I have omitted these parts and instead left a print of the python module in the *appendice/hashing*.
+
+Login
+.....
+
+Applications use the *login* PL function when logging in. The *login* function uses python as language and depends on a few python modules for hashing and digesting.
+
+.. literalinclude:: login.py
+   :language: python
+   :linenos:
+   :lines: 25-29, 54-99
+
+As you see this is not straight python, a few extras are assumed existing as you type. These extras are given at runtime by the postgresql python PL extension. 
+
+Amongst these are the *SD* dictionary which is a global dictionary offered to handle sharing of data between python scripts. But more interesting is the *plpy* object which is the gateway to execute queries from within the python script. I am using the *plpy* object both in the *login* and *update_login* functions.
+
+Example
+,,,,,,,
+
+The *login* function is used through a select query. 
+This example depends on the existence of an *admin* user with the username *"admin"* and the password *"1234"*.
+The *login* function will return the fully populated *login_type* if succesfull or a list of null values of similar length.
+
+.. code-block:: sql
+   
+   select * from functions.login('admin', '1234');
+
+The query will yield the following resultset:
+
+.. figure:: images/login_sql.png
+   :figwidth: 100%
 
 
-I will need a table for users holding all basic information about a system user. The user table will hold a reference to
-a phone number in a phone number table as well as a reference to an address in the address table.
-Both phone numbers and addresses can be the same for multiple users.
-A Bike is represented by a match between a bike type and a bike serial. It was decided that bike bike types would need
-its own table and therefore the bike table would just be a unique id,being the serial number and a reference to a bike type.
-Two different kinds of users exists: a customer and an employee. Both has to have a reference to a user.
-It was decided that there wouldn't be any usecase not solved by having only Managers, Admins and Mechanics on the payrole
-so the employee table was fixed having all collumns needed by all employees and an extra collumn telling the kind of employee.
+Update_login
+............
 
-.. image:: _static/customer_relation.png
+Applications use the *update_login* function in two scenarios:
 
-Customers has a 1-n relation to rental-contracts
+1. When creating a user the first step involves creating a user, the second updating the user with a password/salt.
+2. When a user wants to alter its password, think *"forgotten password"* functionality.
 
-.. image:: _static/bike_relation.png
+The *update_login* function uses the *plpy* object for updating a *user* record with a new hashed password/salt pair.
 
-Bikes has a m-n relation to contracts, being rental or repair. But bikes are disallowed to be part of two contracts at the same time.
+.. literalinclude:: login.py
+   :language: python
+   :linenos:
+   :lines: 100-103, 129-146
 
-
-Logical design
---------------
-
-TODO: image
-Above you see the referential integrity diagram describing the creation of unique users, bikes, contracts etc
-
-In order to have multiple types of employees i needed inheritance.
-In general there is two ways, if you want least redundancy, of implementing inheritance in sql, here described using the words parent, for abstract class,
-and child for class extending parent class.
-
-Table Per Hierarchy Inheritance
-'''''''''''''''''''''''''''''''
-
-Either you implement all attributes of all children in a single table with an extra attribute telling the kind of child.
-
-Requires the application to implement logic that creates a meta layer over the existing table. This meta layer will differentiate the
-table into virtual sub tables, and know which attributes belong to which subclasses. This is not trivial.
-Might suffer in speed if there is not equality between the quantity of the children.
-
-For example if parent a hast 10 children, where 9 of them are of type b and one of them is of type a. Then in worst case you could say that
-the database would have to go through one miss before finding 9 hits if searching for type b, which is regarded as fast.
-But it would have to go through 9 miss before finding 1 hit if searching for type a, which is awful.
-
-Since the table must have all attributes for all sub classes it cant have required attributes that are not shared by all children.
-This leaves a lot of validation to the application.
-
-Creation/deletion of new types of subclasses would require mangling with the whole table including and potentially
-adding/removing attributes from all instances of all subclasses.
-
-Table Per Type Inheritance
-''''''''''''''''''''''''''
-
-Or you create an abstract parent implementing all common attributes of its children and then create a specific table for
-each kind of child with a reference to its
-Either you could have an abstract employee table that held all information shared by employees like salary, employer-id etc.
-And then create a new table pr type of child all having a reference to a unique row in the parent.
-
-Requires the application to join data from multiple tables pr query. One join pr level of inheritance at the least. This is a trivial task.
+Example
+,,,,,,,
 
 
-Inheritance conclusion
-''''''''''''''''''''''
+.. code_block:: sql
 
-I decided to use Table Per Hierachy Inheritance because i found a nice Object Relational Mapping library for Python called "pony.orm".
-Pony gave me a "Pythonic" way of implementing my models and solved the underlying dificulties by using the chosen inheritance method.
-I chose to go against the advice of my pros/cons listed above because the system will feature a relative small amount of
-employees compared to customers. And the scale between the different subclasses of employees will be rather equal, except the single admin pr shop.
+   select * from functions.update_login('admin', '5678')
 
 
-My final user model can be represented like this:
 
-TODO:image
-
-Why use ORM
------------
-
-I chose to use an ORM since it give me rapid developement of the prototype. Using the orm i was early on developing my models and able
-to get a god idea of the project through experimentation that using raw sql would have taken much more time.
-I know that using an ORM conceals the underlying data structure and obfuscates the interactions between the application and the database.
-However what i gain from the rapid development 
-
-
-Normalization
--------------
-
-In order to minimize redundancy in the database it has to be normalized.
-
-First normal form
-'''''''''''''''''
-The first normal form explains that you should not have tables where the manipulation of entries have ungoverned side effects.
-Lets look at the user table. All base information regarding the user is withheld in this class except attributes which can be shared
-by many users, like addresses, and phone numbers.
-The information of the user is atomic in the way that it is not dependent on the existence of contracts etc. A user is created and a user exists.
-
-Second normal form
-''''''''''''''''''
-Tells that it is not allowed to have a partial dependency of an attribute in relation to the primary key.
-An example would be the user entity. The attributes of the user are dependent on its primary key and new user types can be created
-by refering to this key
-
-Third normal form
-'''''''''''''''''
-This form is about not locking in on a too specific usecase when designing the database. In this scenario The user again is a good example
-since it is on its own and includes all needed attributes to represent itself.
-I decided early on that i wanted all users to be "users" and not different collections of "user" components.
-In this way you can query for a user and later evaluate which role and extra attributes this user holds.
-
-Normalization

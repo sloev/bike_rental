@@ -24,8 +24,6 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Bike rental 1 documentation" href="index.html" />
-    <link rel="next" title="Conclusion" href="conclusion.html" />
-    <link rel="prev" title="Introduction" href="introduction.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -38,12 +36,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="conclusion.html" title="Conclusion"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="introduction.html" title="Introduction"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Bike rental 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -80,28 +72,6 @@ Above you see the referential integrity diagram describing the creation of uniqu
 <p>In order to have multiple types of employees i needed inheritance.
 In general there is two ways, if you want least redundancy, of implementing inheritance in sql, here described using the words parent, for abstract class,
 and child for class extending parent class.</p>
-<div class="section" id="table-per-hierarchy-inheritance">
-<h3>Table Per Hierarchy Inheritance<a class="headerlink" href="#table-per-hierarchy-inheritance" title="Permalink to this headline">¶</a></h3>
-<p>Either you implement all attributes of all children in a single table with an extra attribute telling the kind of child.</p>
-<p>Requires the application to implement logic that creates a meta layer over the existing table. This meta layer will differentiate the
-table into virtual sub tables, and know which attributes belong to which subclasses. This is not trivial.
-Might suffer in speed if there is not equality between the quantity of the children.</p>
-<p>For example if parent a hast 10 children, where 9 of them are of type b and one of them is of type a. Then in worst case you could say that
-the database would have to go through one miss before finding 9 hits if searching for type b, which is regarded as fast.
-But it would have to go through 9 miss before finding 1 hit if searching for type a, which is awful.</p>
-<p>Since the table must have all attributes for all sub classes it cant have required attributes that are not shared by all children.
-This leaves a lot of validation to the application.</p>
-<p>Creation/deletion of new types of subclasses would require mangling with the whole table including and potentially
-adding/removing attributes from all instances of all subclasses.</p>
-</div>
-<div class="section" id="table-per-type-inheritance">
-<h3>Table Per Type Inheritance<a class="headerlink" href="#table-per-type-inheritance" title="Permalink to this headline">¶</a></h3>
-<p>Or you create an abstract parent implementing all common attributes of its children and then create a specific table for
-each kind of child with a reference to its
-Either you could have an abstract employee table that held all information shared by employees like salary, employer-id etc.
-And then create a new table pr type of child all having a reference to a unique row in the parent.</p>
-<p>Requires the application to join data from multiple tables pr query. One join pr level of inheritance at the least. This is a trivial task.</p>
-</div>
 <div class="section" id="inheritance-conclusion">
 <h3>Inheritance conclusion<a class="headerlink" href="#inheritance-conclusion" title="Permalink to this headline">¶</a></h3>
 <p>I decided to use Table Per Hierachy Inheritance because i found a nice Object Relational Mapping library for Python called &#8220;pony.orm&#8221;.
@@ -157,8 +127,6 @@ In this way you can query for a user and later evaluate which role and extra att
 <li><a class="reference internal" href="#">Problem solution</a><ul>
 <li><a class="reference internal" href="#design">Design</a></li>
 <li><a class="reference internal" href="#logical-design">Logical design</a><ul>
-<li><a class="reference internal" href="#table-per-hierarchy-inheritance">Table Per Hierarchy Inheritance</a></li>
-<li><a class="reference internal" href="#table-per-type-inheritance">Table Per Type Inheritance</a></li>
 <li><a class="reference internal" href="#inheritance-conclusion">Inheritance conclusion</a></li>
 </ul>
 </li>
@@ -173,16 +141,10 @@ In this way you can query for a user and later evaluate which role and extra att
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="previous chapter">Introduction</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="conclusion.html"
-                        title="next chapter">Conclusion</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/problemsolution.txt"
+      <li><a href="_sources/old_problemsolution.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -211,7 +173,7 @@ In this way you can query for a user and later evaluate which role and extra att
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
       
       |
-      <a href="_sources/problemsolution.txt"
+      <a href="_sources/old_problemsolution.txt"
           rel="nofollow">Page source</a></li>
     </div>
 

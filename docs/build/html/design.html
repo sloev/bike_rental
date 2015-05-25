@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Design &mdash; Bike rental 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Bike rental 1 documentation" href="index.html" />
+    <link rel="next" title="Problem solution" href="problemsolution.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="problemsolution.html" title="Problem solution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Bike rental 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="design">
+<h1>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h1>
+<p>I started this project from the Python point of view. Which meant i focussed on how i would implement the application and secondary the application.</p>
+<p>This proved early to be a wrong decision. Signs of this showed through my use of object relational mapping frameworks such as Pony ORM for python.
+Nothing is wrong with Pony ORM if you want to degrade your database to secondary citizen in the system.
+However since this class is about database design i wanted to focus on the development of a data centric system with lower priority on the implementation of the application layer.</p>
+<p>In the start i had developed a schematic representation full of inheritance since i come from object oriented programming paradigms.</p>
+<p>I wanted different roles for users in my system and wanted to be able to restrict actions based on these rules. Pony ORM gave me easy inheritance so i could implement a base user with details like password, username, address etc and then inherit from that user in my employee and customer. Admins, mechanics and managers would then inherit from the employee and so forth. Before long i recognized i needed to see which kind of tables Pony ORM were generating and i was horrorfied to see that it used table per hierachy inheritance.</p>
+<p>As i said before inheritance is not a database concept in the normal sense. Postgresql has implemented inheritance but it lacks a lot of important functionality and is in general not recommended, they even have a disclaimer in their documentation telling of the faulty implementation <a class="footnote-reference" href="#postgresql-inheritance" id="id1">[2]</a>.</p>
+<p>In normal sql you implement inheritance by going with one of two popular concepts:</p>
+<ul class="simple">
+<li>Table per hierachy</li>
+<li>Table per type</li>
+</ul>
+<div class="section" id="table-per-hierarchy-inheritance">
+<h2>Table Per Hierarchy Inheritance<a class="headerlink" href="#table-per-hierarchy-inheritance" title="Permalink to this headline">¶</a></h2>
+<p>You implement all attributes of all children in a single table with an extra attribute telling the kind of child.</p>
+<p>Requires the application to implement logic that creates a meta layer over the existing table. This meta layer will differentiate the
+table into virtual sub tables, and know which attributes belong to which subclasses. This is not trivial.
+Might suffer in speed if there is not equality between the quantity of the children.</p>
+<p>For example if parent a hast 10 children, where 9 of them are of type b and one of them is of type a. Then in worst case you could say that
+the database would have to go through one miss before finding 9 hits if searching for type b, which is regarded as fast.
+But it would have to go through 9 miss before finding 1 hit if searching for type a, which is awful.</p>
+<p>Since the table must have all attributes for all sub classes it cant have required attributes that are not shared by all children.
+This leaves a lot of validation to the application.</p>
+<p>Creation/deletion of new types of subclasses would require mangling with the whole table including and potentially
+adding/removing attributes from all instances of all subclasses.</p>
+</div>
+<div class="section" id="table-per-type-inheritance">
+<h2>Table Per Type Inheritance<a class="headerlink" href="#table-per-type-inheritance" title="Permalink to this headline">¶</a></h2>
+<p>Or you create an abstract parent implementing all common attributes of its children and then create a specific table for
+each kind of child with a reference to its parent.
+You could have an abstract employee table that held all information shared by employees like salary, employer-id etc.
+And then create a new table pr type of child all having a reference to a unique row in the parent.</p>
+<p>Requires the application to join data from multiple tables pr query. One join pr level of inheritance at the least. This is a trivial task but reduces speed pr query.</p>
+<table class="docutils footnote" frame="void" id="sql-antipatterns" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><a class="reference external" href="https://pragprog.com/book/bksqla/sql-antipatterns">https://pragprog.com/book/bksqla/sql-antipatterns</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="postgresql-inheritance" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[2]</a></td><td>ndosn</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Design</a><ul>
+<li><a class="reference internal" href="#table-per-hierarchy-inheritance">Table Per Hierarchy Inheritance</a></li>
+<li><a class="reference internal" href="#table-per-type-inheritance">Table Per Type Inheritance</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="problemsolution.html"
+                        title="next chapter">Problem solution</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/design.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, johannes jørgensen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      
+      |
+      <a href="_sources/design.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>
