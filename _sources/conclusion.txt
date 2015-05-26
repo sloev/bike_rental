@@ -7,9 +7,18 @@ I sacrified the development of an application because time was running out and i
 
 I think i could have planned my process much better if i had given the requirements some extra thoughts in the beginning of the semester. 
 
+Product and Process comments
+----------------------------
+
+I have used Sphinx and RestructuredText to write this report which made it possible to reduce the dificulties of writing since i was generating the layout on the fly. An added benefit was the live-reload preview of the report in a browser while i wrote the content in clear text. See http://sphinx-doc.org for more info.
+
 Sourcecode for this project has been released as opensource on github at the following address:
 
 http://github.com/sloev/bike_rental
+
+And a html edition of this report is accessed via:
+
+http://sloev.github.io/bike_rental
 
 Requirements conclusion
 -----------------------

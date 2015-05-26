@@ -5,6 +5,13 @@
 
 Bike rental report
 ======================================
+This report describes the creation of a bike rental system using postgresql.
+You can find the sourcecode at:
+
+http://github.com/sloev/bike_rental
+
+Regards!
+SLØV
 
 .. toctree::
    :maxdepth: 2
