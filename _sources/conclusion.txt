@@ -24,6 +24,7 @@ Requirements conclusion
 -----------------------
 
 **R1**
+
 Is fulfilled by the *bikes* schema and its tables.
 
 **R2**
