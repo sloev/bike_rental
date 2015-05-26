@@ -61,7 +61,7 @@ create schema bikes;
 	);
 	create table bikes.bike(
 		serial_number serial primary key,
-		bike_type int references bikes.type(type_id)	
+		type_id int references bikes.type(type_id)	
 	);
 
 	

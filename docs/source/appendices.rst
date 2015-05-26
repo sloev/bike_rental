@@ -1,16 +1,26 @@
 Appendices
 ==========
 
+Vocabulary
+----------
+
+PL
+	Precedural Language
+Python
+	Object orinted programming language
+Plpython 
+	An extension to postgresql that lets you write python inside PL functions
+Plpy
+	The object from which you can query the database from PLPython
 
 Hashing
 -------
 The following hashing functionality was implemented in python as a module.
 *_* is used as a descriptor for private, *internal*, functions.
 
-.. literalinclude:: login.py
+.. literalinclude:: python/auth.py
    :language: python
    :linenos:
-   :lines: 150-
 
 Proposed projects
 -----------------

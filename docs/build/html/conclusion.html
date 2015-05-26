@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Bike rental 1 documentation" href="index.html" />
     <link rel="next" title="Bibliography" href="bibliography.html" />
-    <link rel="prev" title="Problem solution" href="problemsolution.html" />
+    <link rel="prev" title="Normalization" href="normalization.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -42,7 +42,7 @@
           <a href="bibliography.html" title="Bibliography"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="problemsolution.html" title="Problem solution"
+          <a href="normalization.html" title="Normalization"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Bike rental 1 documentation</a> &raquo;</li> 
       </ul>
@@ -55,7 +55,32 @@
             
   <div class="section" id="conclusion">
 <h1>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h1>
-<p>hello</p>
+<p>I am very happy with the resulting database design and i find it very robust and future proof. I am happy that i went through so many iteraions ending up where i did because i learned a better more clean database design that way.</p>
+<p>I sacrified the development of an application because time was running out and i had to choose between good database design and a good application.</p>
+<p>I think i could have planned my process much better if i had given the requirements some extra thoughts in the beginning of the semester.</p>
+<p>Sourcecode for this project has been released as opensource on github at the following address:</p>
+<p><a class="reference external" href="http://github.com/sloev/bike_rental">http://github.com/sloev/bike_rental</a></p>
+<div class="section" id="requirements-conclusion">
+<h2>Requirements conclusion<a class="headerlink" href="#requirements-conclusion" title="Permalink to this headline">¶</a></h2>
+<p><strong>R1</strong>
+Is fulfilled by the <em>bikes</em> schema and its tables.</p>
+<p><strong>R2</strong></p>
+<p>Is fulfilled by the combination of the <em>users.user</em> table and the <em>details</em> schema and its tables.</p>
+<p><strong>R3</strong></p>
+<p>Is fulfilled by the two python PL functions <em>login</em> and <em>update_login</em>.</p>
+<p><strong>R4</strong></p>
+<p>This is not directlym implemented since i have learned that inheritance is not a good SQL design. Instead they are implemented as user types together with the customer. Each can of course have their own special table for extra attributes.</p>
+<p><strong>R5</strong></p>
+<p>Partly fulfilled as the <em>repair_contract</em> does not contain information on whether it has been completd. However the rest of R5 is fulfilled by the <em>contracts</em> schema, its tables and the collaborating tables from <em>bikes</em> etc.</p>
+<p><strong>R6</strong></p>
+<p>Is not fulfilled since i too late learned that an ORM would conceil bad SQL from me, so instead i focussed on the creation of a good database design with a few helping functions to ease the development of an application. For example all logging in has been taken care of by the database.</p>
+<p><strong>R7</strong></p>
+<p>Not implemented because of two things:</p>
+<ul class="simple">
+<li>I have not implemented an application to handle permissions etc.</li>
+<li>I have not instead implemented SQL roles and access control permissions for individual users.</li>
+</ul>
+</div>
 </div>
 
 
@@ -64,9 +89,17 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Conclusion</a><ul>
+<li><a class="reference internal" href="#requirements-conclusion">Requirements conclusion</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="problemsolution.html"
-                        title="previous chapter">Problem solution</a></p>
+  <p class="topless"><a href="normalization.html"
+                        title="previous chapter">Normalization</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bibliography.html"
                         title="next chapter">Bibliography</a></p>

@@ -26,3 +26,7 @@ After skipping the ORM's and diving straight for sql i also lost the rapid devel
 I decided to focus on implementing the sql and developing the needed queries for an eventual application layer.
 I wanted to use the Stored Procedures and the Python extension to develop complex functions that would replace a lot of the heavy business logic in the application layer.
 In this way i could present a solution that would in precise words tell how to implement the application logic without having it as the main focus.
+
+.. raw:: pdf
+
+   PageBreak

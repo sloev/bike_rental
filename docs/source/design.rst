@@ -1,6 +1,13 @@
 Design
 ======
 
+.. figure:: images/er.png
+   :figwidth: 100%
+
+   *Entity relationship diagram of the bike rental database*
+
+
+
 The database is designed around the users. Different users create contracts between eachother regarding bikes.
 
 The users are the central aspect and they are represented by a base user table with an attribute telling their type.
@@ -13,3 +20,7 @@ The *contracts.assigned_to* table tells of which users are assigned to which con
 
 A bike is conceptualized as a combination between a unique serial number and some type specific details.
 I decided to place the details in their own table, since they can be shared by many bikes, and use the serial number as the primary key.
+
+.. raw:: pdf
+
+   PageBreak

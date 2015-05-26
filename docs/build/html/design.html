@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Bike rental 1 documentation" href="index.html" />
-    <link rel="next" title="implementation" href="implementation.html" />
+    <link rel="next" title="Implementation" href="implementation.html" />
     <link rel="prev" title="Process" href="process.html" />
    
   
@@ -39,7 +39,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="implementation.html" title="implementation"
+          <a href="implementation.html" title="Implementation"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="process.html" title="Process"
@@ -55,6 +55,10 @@
             
   <div class="section" id="design">
 <h1>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h1>
+<div class="figure" id="id1" style="width: 100%">
+<img alt="_images/er.png" src="_images/er.png" />
+<p class="caption"><span class="caption-text"><em>Entity relationship diagram of the bike rental database</em></span></p>
+</div>
 <p>The database is designed around the users. Different users create contracts between eachother regarding bikes.</p>
 <p>The users are the central aspect and they are represented by a base user table with an attribute telling their type.
 A table exist for customer specific attributes as well as employee specific attributes. Each have the users.user_id foreign key as their primary key.</p>
@@ -76,7 +80,7 @@ I decided to place the details in their own table, since they can be shared by m
                         title="previous chapter">Process</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="implementation.html"
-                        title="next chapter">implementation</a></p>
+                        title="next chapter">Implementation</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">

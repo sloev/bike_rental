@@ -54,7 +54,7 @@ insert into bikes.type (description, color) values
 	('long and comfortable', '#ffddaa')
 	returning *;
 
-insert into bikes.bike(serial_number, bike_type) values
+insert into bikes.bike(serial_number, type_id) values
 	(12435542, 1),
 	(5467332, 1),
 	(1122134, 2),
@@ -71,12 +71,23 @@ insert into contracts.contract_types(type_name)
 
 insert into contracts.contract (begin_date, end_date, bike_serial, type_id) 
 	values
-	('1/9/2014', '1/1/2014', 12435542, 1)
+	('1/5/2014', '1/9/2014', 12435542, 1),
+	('2/10/2014', '31/12/2014', 1122134, 2)
 	returning *;
 
 insert into contracts.rental_contract(contract_id, customer_id)
 	values
 	(1, 2)
+	returning *;
+
+insert into contracts.report(serial_number, report_text)
+	values
+	(1122134, 'broken frontwheel')
+	returning *;
+
+insert into contracts.repair_contract(contract_id, report_id)
+	values
+	(2, 1)
 	returning *;
 
 insert into contracts.bill(contract_id, amount, pay_date)
@@ -86,9 +97,6 @@ insert into contracts.bill(contract_id, amount, pay_date)
 
 insert into contracts.assigned_to(contract_id, employee_id)
 	values
-	(1, 4)
+	(1, 4),
+	(2,3)
 	returning *;
-
-
-
-

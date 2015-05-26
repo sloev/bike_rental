@@ -2,6 +2,8 @@
 Introduction
 ============
 
+*A vocabolary is included in the appendice/vocabulary*
+
 This report will describe the the creation of a database system for a bike rental company called "Wheels".
 "Wheels" is a company renting out bikes and its staff includes managers that take care of customers and mechanics
 that take care of bikes.
@@ -50,3 +52,7 @@ Requirements
 +-------+------------------------------------------------------------------------------+
 |R7     |Users should only be able to view and edit their own contracts                |
 +-------+------------------------------------------------------------------------------+
+
+.. raw:: pdf
+
+   PageBreak

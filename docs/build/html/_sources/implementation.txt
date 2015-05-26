@@ -66,7 +66,7 @@ If i wanted a function to return a predecided set of attributes i needed a custo
 .. literalinclude:: sql/setup.sql
    :language: sql
    :linenos:
-   :lines: 105-121
+   :lines: 115-131
 
 I developed an authentication python module with the needed functions for creating hashes and so forth. But i did not install it system wide so my two sotred procedures, *login* and *update_login*, each have it embedded in their source.
 I have omitted these parts and instead left a print of the python module in the *appendice/hashing*.
@@ -79,7 +79,7 @@ Applications use the *login* PL function when logging in. The *login* function u
 .. literalinclude:: sql/setup.sql
    :language: python
    :linenos:
-   :lines: 124-126, 152-197
+   :lines: 135-137, 163-208
 
 As you see this is not straight python, a few extras are assumed existing as you type. These extras are given at runtime by the postgresql python PL extension. 
 
@@ -118,7 +118,7 @@ The *update_login* function uses the *plpy* object for updating a *user* record 
 .. literalinclude:: sql/setup.sql
    :language: python
    :linenos:
-   :lines: 199-201, 226-238
+   :lines: 210-212, 237-249
 
 Example
 ,,,,,,,
@@ -145,16 +145,84 @@ The base contract table, *contracts.contract*, only hold universal information s
 
 The *contracts.contract_type* is used for telling the application code which other tables to join when querying for all data regarding a contract.
 
+Example
+'''''''
+
 For example if you want to query a specific rental contract you might do the following:
 
 .. code-block:: sql
 
    select * from contracts.contract c where c.contract_id = 1
 
+Will yield
+
+.. figure:: images/contract_1.png
+   :figwidth: 100%
+   :scale: 300%
+
+This result tells us that the contract is a *rental_contract* but it does include the *rental_contract* specific attributes in its result set.
+
+The test script creates two kinds of contracts *rental* and *repair* if we include these in our query we will receive resultset including attribute from both tables if existing. Furthermore we also get a contract_type collumn with the descriptive name instead of the *type_id*.
+Modified to show all contracts and all contract attributes it looks like this:
+
+.. literalinclude:: sql/contract_query.sql
+   :language: sql
+   :linenos:
+
+This yields the complete data set of a contract including id's of customers if its a rental contract or the assigned employee if its a repair contract.
+
+.. figure:: images/contract_2.png
+   :figwidth: 100%
+   :scale: 300%
+
+
+The result is a denormalized resultset filled with nulls where rows are missing in the involved tables. As expected only attributes regarding the contract type exists in each row.
+
+
 Bikes
 -----
 
-asfs
+Bikes are the product. They are the unique combination of a bike type and a serial number. A special collumn hold all information regarding the bike type. Like description and color.
+Bikes are also the subject of reports. Reports can be everything from a report on what was fixed during the repair of a bike, to the planning of bike modificatins etc.
+
+Example
+'''''''
+
+Bikes can be queried in a similar fashion as the other entities. and if you want to include the attributes from the bike type table you can use the following query:
+
+.. literalinclude:: sql/bike_query.sql
+   :language: sql
+   :linenos:
+
+Which yields the following result set:
+
+.. figure:: images/bike_1.png
+   :figwidth: 100%
+   :scale: 300%
+
+
+
+
+If you want to query which reports there is on a bike you can use the following query:
+
+.. code-block:: sql
+
+   SELECT *
+   FROM contracts.report report
+   WHERE report.serial_number = 1122134;
+
+Which yields the following resultset:
+
+.. figure:: images/bike_2.png
+   :figwidth: 100%
+   :scale: 300%
+
+
+
+
+.. raw:: pdf
+
+   PageBreak
 
 
 

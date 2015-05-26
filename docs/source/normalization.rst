@@ -1,7 +1,9 @@
 Normalization
 =============
 
-what is normalization?
+I have normalized the database to a certain extend. I have not gone into the extremes where you reach nearly a "singleton"-ness of all data.
+
+Noprmalization is when you seek to reduce redundancy in your database and try to design it without a certain functionality in mind but instead with focus on the stored data and the ability to query this freely.
 
 First normal form
 '''''''''''''''''
@@ -36,3 +38,7 @@ The *contracts.bill* is a unique item. Its fields are sparse and specific for ea
 
 Redundancy is minimal in this setup and tables are only populated if they are needed to.
 The only downside is the rather complex queries and inserts when you are working with these *splitted out* tables.
+
+.. raw:: pdf
+
+   PageBreak
